@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flight Countdown</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #0f172a, #1e293b);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      padding: 30px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+    }
+    #countdown {
+      font-size: 3rem;
+      margin-top: 20px;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    .flight {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>✈️ Flight Countdown</h1>
+  <div class="flight">
+    BLR → FRA (Lufthansa LH755) <br>
+    June 12, 2026 • 03:00 AM
+  </div>
+  <div id="countdown"></div>
+</div>
+
+<script>
+  // Flight departure time (IST)
+  const targetDate = new Date("June 12, 2026 03:00:00 GMT+0530").getTime();
+
+  const timer = setInterval(() => {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((distance / 1000 / 60) % 60);
+    const seconds = Math.floor((distance / 1000) % 60);
+
+    document.getElementById("countdown").innerHTML =
+      `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+    if (distance < 0) {
+      clearInterval(timer);
+      document.getElementById("countdown").innerHTML = "🛫 Flight Departed!";
+    }
+  }, 1000);
+</script>
+
+</body>
+</html>
