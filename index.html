@@ -1,70 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Flight Countdown</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: linear-gradient(to right, #0f172a, #1e293b);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      padding: 30px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(10px);
-    }
-    #countdown {
-      font-size: 3rem;
-      margin-top: 20px;
-    }
-    h1 {
-      margin-bottom: 10px;
-    }
-    .flight {
-      font-size: 1.2rem;
-      opacity: 0.8;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rajesh’s Europe Trip ✈️</title>
+
+<style>
+body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
+
+.container{
+  max-width:500px;
+  width:100%;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.card{
+  background: rgba(255,255,255,0.06);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:15px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.route{
+  display:flex;
+  justify-content:space-between;
+  font-weight:bold;
+}
+
+.time{
+  font-size:1.8rem;
+  margin-top:10px;
+}
+
+.meta{
+  font-size:0.9rem;
+  opacity:0.7;
+}
+
+.status{
+  display:inline-block;
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:0.8rem;
+  margin-top:10px;
+}
+
+.upcoming{background:#2563eb;}
+.live{background:#16a34a;}
+.done{background:#dc2626;}
+
+.count{
+  font-size:1.2rem;
+  margin-top:10px;
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-  <h1>✈️ Flight Countdown</h1>
-  <div class="flight">
-    BLR → FRA (Lufthansa LH755) <br>
-    June 12, 2026 • 03:00 AM
+<h1>🌍 Rajesh’s Europe Trip</h1>
+
+<!-- FLIGHT 1 -->
+<div class="card">
+  <div class="route">
+    <span>BLR</span>
+    <span>→</span>
+    <span>FRA</span>
   </div>
-  <div id="countdown"></div>
+  <div class="meta">Lufthansa LH755 • June 12, 2026</div>
+  <div class="time">03:00 AM</div>
+  <div id="status1" class="status"></div>
+  <div id="count1" class="count"></div>
+</div>
+
+<!-- FLIGHT 2 -->
+<div class="card">
+  <div class="route">
+    <span>FRA</span>
+    <span>→</span>
+    <span>DEL</span>
+  </div>
+  <div class="meta">Air India AI 2026 • Nov 25, 2026</div>
+  <div class="time">11:15 AM</div>
+  <div class="meta">Terminal 1 → Terminal 3 • 8h 40m</div>
+  <div id="status3" class="status"></div>
+  <div id="count3" class="count"></div>
+</div>
+
+<!-- FLIGHT 3 -->
+<div class="card">
+  <div class="route">
+    <span>FRA</span>
+    <span>→</span>
+    <span>BLR</span>
+  </div>
+  <div class="meta">Lufthansa LH754 • June 28, 2026</div>
+  <div class="time">12:50 PM</div>
+  <div id="status2" class="status"></div>
+  <div id="count2" class="count"></div>
+</div>
+
 </div>
 
 <script>
-  // Flight departure time (IST)
-  const targetDate = new Date("June 12, 2026 03:00:00 GMT+0530").getTime();
 
-  const timer = setInterval(() => {
-    const now = new Date().getTime();
-    const distance = targetDate - now;
+const flight1 = new Date("June 12, 2026 03:00:00 GMT+0530").getTime();
+const flight2 = new Date("June 28, 2026 12:50:00 GMT+0530").getTime();
+const flight3 = new Date("November 25, 2026 11:15:00 GMT+0100").getTime();
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((distance / 1000 / 60) % 60);
-    const seconds = Math.floor((distance / 1000) % 60);
+function update(id, statusId, target){
+  const now = new Date().getTime();
+  const d = target - now;
 
-    document.getElementById("countdown").innerHTML =
-      `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  let statusEl = document.getElementById(statusId);
 
-    if (distance < 0) {
-      clearInterval(timer);
-      document.getElementById("countdown").innerHTML = "🛫 Flight Departed!";
-    }
-  }, 1000);
+  if(d <= 0){
+    document.getElementById(id).innerHTML = "Completed ✈️";
+    statusEl.innerHTML = "Completed";
+    statusEl.className = "status done";
+    return;
+  }
+
+  const days = Math.floor(d/(1000*60*60*24));
+  const hours = Math.floor((d/(1000*60*60))%24);
+  const mins = Math.floor((d/(1000*60))%60);
+  const secs = Math.floor((d/1000)%60);
+
+  document.getElementById(id).innerHTML =
+    days+"d "+hours+"h "+mins+"m "+secs+"s";
+
+  if(days < 1){
+    statusEl.innerHTML = "Live Soon";
+    statusEl.className = "status live";
+  } else {
+    statusEl.innerHTML = "Upcoming";
+    statusEl.className = "status upcoming";
+  }
+}
+
+setInterval(()=>{
+  update("count1","status1",flight1);
+  update("count2","status2",flight2);
+  update("count3","status3",flight3);
+},1000);
+
 </script>
 
 </body>
